@@ -1,0 +1,92 @@
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class EcuacionCuadratica extends Application {
+    private TextField coefAField;
+    private TextField coefBField;
+    private TextField coefCField;
+    private Label resultLabel;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Ecuación Cuadrática");
+
+        // Crear campos de texto para ingresar los coeficientes
+        Label coefALabel = new Label("Coeficiente A:");
+        coefAField = new TextField();
+        Label coefBLabel = new Label("Coeficiente B:");
+        coefBField = new TextField();
+        Label coefCLabel = new Label("Coeficiente C:");
+        coefCField = new TextField();
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(10));
+
+        gridPane.add(coefALabel, 0, 0);
+        gridPane.add(coefAField, 1, 0);
+        gridPane.add(coefBLabel, 0, 1);
+        gridPane.add(coefBField, 1, 1);
+        gridPane.add(coefCLabel, 0, 2);
+        gridPane.add(coefCField, 1, 2);
+
+        // Crear botón de cálculo
+        Button calculateButton = new Button("Calcular");
+        calculateButton.setOnAction(e -> calculateEquation());
+
+        // Etiqueta para mostrar el resultado
+        resultLabel = new Label();
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(calculateButton, resultLabel);
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(gridPane, buttonBox);
+
+        Scene scene = new Scene(root, 400, 200);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void calculateEquation() {
+        double A, B, C, D;
+        try {
+            A = Double.parseDouble(coefAField.getText());
+            B = Double.parseDouble(coefBField.getText());
+            C = Double.parseDouble(coefCField.getText());
+        } catch (NumberFormatException e) {
+            resultLabel.setText("Ingrese coeficientes válidos.");
+            return;
+        }
+
+        D = Math.pow(B, 2) - (4 * A * C);
+        if (D == 0) {
+            double X = -B / (2 * A);
+
+            resultLabel.setText("La ecuación tiene una única solución:\nX = " + X);
+        } else if (D > 0) {
+            double X1 = (-B + Math.sqrt(D)) / (2 * A);
+            double X2 = (-B - Math.sqrt(D)) / (2 * A);
+
+            resultLabel.setText("La ecuación tiene dos soluciones reales:\nX1 = " + X1 + "\nX2 = " + X2);
+        } else {
+            double Re = -B / (2 * A);
+            double Im = Math.sqrt(-D) / (2 * A);
+
+            resultLabel.setText("La ecuación tiene soluciones complejas:\nX1 = " + Re + " + " + Im + "i\nX2 = " + Re+ " - " + Im + "i");
+        }
+    }
+}
